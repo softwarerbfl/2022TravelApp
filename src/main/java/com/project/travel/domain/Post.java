@@ -31,9 +31,9 @@ public class Post {
     @JoinColumn(name="id")
     private User user; //게시물 작성자
 
-    @ManyToOne(fetch = FetchType.LAZY)
+/*    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="id")
-    private User likeUser;
+    private User likeUser;*/
 
     @ManyToMany
     @JoinTable(name="post_place",
