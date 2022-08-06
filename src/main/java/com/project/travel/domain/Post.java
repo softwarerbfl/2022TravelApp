@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.persistence.criteria.CriteriaBuilder;
 import java.lang.reflect.Member;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,5 +48,6 @@ public class Post {
             inverseJoinColumns = @JoinColumn(name="tag_id"))
     private List<Tag> tags= new ArrayList<>(); //게시물 내의 해시테그
 
-
+    @ElementCollection
+    private List<Integer> day=new ArrayList<>(); //몇 번째 날인지에 대한 정보
 }
