@@ -24,11 +24,15 @@ public class Post {
 
     private String title; //게시물 제목
     private Long like; //좋아요 개수
-    private Long score; //게시물 평점
+    private Long score; //게시물 평점63
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="id")
     private User user; //게시물 작성자
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="id")
+    private User likeUser;
 
     @ManyToMany
     @JoinTable(name="post_place",
