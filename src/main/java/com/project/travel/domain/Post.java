@@ -8,8 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.persistence.criteria.CriteriaBuilder;
-import java.lang.reflect.Member;
 import java.util.ArrayList;
 import java.util.List;
 
