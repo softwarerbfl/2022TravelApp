@@ -1,5 +1,6 @@
 package com.project.travel.service;
 
+import com.project.travel.controller.UserForm;
 import com.project.travel.domain.User;
 import com.project.travel.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -44,5 +45,10 @@ public class UserService {
     public User findOne(Long userId){
         return userRepository.findOne(userId);
     }
-
+    /**
+     * 로그인 시 아이디에 해당하는 비밀번호가 일치할 경우 해당 USER객체 반환
+     */
+    public User loginCheck(UserForm dto){
+        return userRepository.checkIdPassword(dto.getUserId(),dto.getUserPassword());
+    }
 }

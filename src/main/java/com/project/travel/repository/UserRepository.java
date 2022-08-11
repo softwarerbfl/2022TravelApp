@@ -1,5 +1,6 @@
 package com.project.travel.repository;
 
+import com.project.travel.controller.UserForm;
 import com.project.travel.domain.User;
 import com.project.travel.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,14 @@ public class UserRepository {
     public User findByUserId(String userId){
         return em.createQuery("select u from User u where u.userId= :userId", User.class)
                 .setParameter("userId",userId)
+                .getSingleResult();
+    }
+
+
+    public User checkIdPassword(String userId, String userPassword) {
+        return em.createQuery("select u from User u where u.userId= :userId and u.userPassword= :userPassword", User.class)
+                .setParameter("userId",userId)
+                .setParameter("userPassword",userPassword)
                 .getSingleResult();
     }
 }
