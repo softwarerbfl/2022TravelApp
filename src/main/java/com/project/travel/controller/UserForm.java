@@ -13,5 +13,4 @@ public class UserForm {
 
     private String userId;
     private String userPassword;
-    private String userPasswordCheck;
 }

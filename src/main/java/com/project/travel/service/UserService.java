@@ -3,6 +3,7 @@ package com.project.travel.service;
 import com.project.travel.domain.User;
 import com.project.travel.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,19 +13,22 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class UserService {
+    @Autowired
     private final UserRepository userRepository;
-
-    @Transactional(readOnly = false)
+    /**
+     * 회원 가입
+     */
+    @Transactional
     public Long join(User user){
         validateDuplication(user);
         userRepository.save(user);
         return user.getId();
     }
-    //중복되는 회원 이름 있을 경우 예외처리
+    //아이디 중복 확인 함수
     private void validateDuplication(User user){
-        List<User> findMembers=userRepository.findByName(user.getUserName());
-        if(!findMembers.isEmpty()){
-            throw new IllegalStateException("이미 존재하는 회원입니다.");
+        User findUsers=userRepository.findByUserId(user.getUserId());
+        if(findUsers.getUserId()!=null){
+            throw new IllegalStateException("이미 존재하는 아이디입니다.");
         }
     }
     /**
@@ -33,6 +37,10 @@ public class UserService {
     public List<User> findMembers(){
         return userRepository.findAll();
     }
+
+    /**
+     * 회원 아이디로 회원 조회
+     */
     public User findOne(Long userId){
         return userRepository.findOne(userId);
     }
