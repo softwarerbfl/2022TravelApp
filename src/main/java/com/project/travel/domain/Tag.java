@@ -19,6 +19,11 @@ public class Tag {
 
     private String tagContent; //해시태그 내용
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
+
     @ManyToMany(mappedBy = "tags")
     private List<Post> posts=new ArrayList<>(); //해시태그가 포함된 게시물들
+
+
 }

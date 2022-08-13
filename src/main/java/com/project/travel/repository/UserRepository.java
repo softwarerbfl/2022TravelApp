@@ -3,6 +3,7 @@ package com.project.travel.repository;
 import com.project.travel.controller.UserForm;
 import com.project.travel.domain.User;
 import com.project.travel.service.UserService;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

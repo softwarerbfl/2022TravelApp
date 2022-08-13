@@ -23,6 +23,11 @@ public class User {
     private String userPassword;
     private String userPasswordCheck;
 
+    //사용자의 검색 기록
+    @OneToMany(mappedBy="user")
+    @JsonIgnore
+    private List<Tag> userSearch=new ArrayList<>();
+
     @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<Post> posts=new ArrayList<>();
@@ -34,4 +39,10 @@ public class User {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name="user_image_id")
     private UserImage userImage;
+
+    //사용자가 검색했을 때 검색 기록(tag)을 추가
+    public void addTag(Tag tag){
+        userSearch.add(tag);
+        tag.setUser(this);
+    }
 }

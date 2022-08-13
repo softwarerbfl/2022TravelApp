@@ -7,10 +7,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 
 @Controller
@@ -18,6 +20,15 @@ import javax.validation.Valid;
 public class UserController {
     private final UserService userService;
 
+    /**
+     * 전체 USER조회
+     */
+    @GetMapping("/user/all")
+    public List<User> allUser(Model model){
+        List<User> users=userService.findMembers();
+        model.addAttribute("users", users);
+        return users;
+    }
     /**
      * 회원가입 API
      * @param dto : 회원가입할 때 입력하는 정보를 담은 객체
