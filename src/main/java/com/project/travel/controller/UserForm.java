@@ -1,5 +1,7 @@
 package com.project.travel.controller;
 
+import com.project.travel.domain.User;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,4 +15,11 @@ public class UserForm {
 
     private String userId;
     private String userPassword;
+
+    @Builder
+    public void UserInfoDto(User user){
+        this.userName=user.getUserName();
+        this.userId=user.getUserId();
+        this.userPassword=user.getUserPassword();
+    }
 }

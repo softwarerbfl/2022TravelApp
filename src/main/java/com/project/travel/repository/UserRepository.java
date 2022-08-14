@@ -34,6 +34,12 @@ public class UserRepository {
         return em.createQuery("select u from User u", User.class)
                 .getResultList();
     }
+
+    /**
+     * userId를 넘겨주면 이에 해당하는 User를 넘겨줌
+     * @param userId
+     * @return User
+     */
     public User findByUserId(String userId){
         try{
             return em.createQuery("select u from User u where u.userId= :userId", User.class)

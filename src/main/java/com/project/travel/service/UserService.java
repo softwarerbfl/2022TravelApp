@@ -49,6 +49,7 @@ public class UserService {
     /**
      * 로그인 시 아이디에 해당하는 비밀번호가 일치할 경우 해당 USER객체 반환
      */
+    @Transactional
     public User loginCheck(UserForm dto){
         return userRepository.checkIdPassword(dto.getUserId(),dto.getUserPassword());
     }

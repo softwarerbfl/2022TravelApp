@@ -24,10 +24,11 @@ public class UserController {
      * 전체 USER조회
      */
     @GetMapping("/user/all")
-    public List<User> allUser(Model model){
+    public ResponseEntity<List<User>> allUser(){
         List<User> users=userService.findMembers();
-        model.addAttribute("users", users);
-        return users;
+        return (users!=null)?
+                ResponseEntity.status(HttpStatus.OK).body(users):
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
     /**
      * 회원가입 API

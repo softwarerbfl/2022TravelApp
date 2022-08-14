@@ -32,6 +32,7 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Post> posts=new ArrayList<>();
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "likeUsers", cascade=CascadeType.ALL)
     private List<Post> likePosts=new ArrayList<>();
 

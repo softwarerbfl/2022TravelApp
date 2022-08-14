@@ -23,6 +23,8 @@ public class Place {
     private Long score; //평점
     private String address; //주소
     private String content;//세부 내용
+
+    @Enumerated(EnumType.STRING)
     private PlaceType type; //장소 타입(숙소, 식당, 관광지)
 
     @Embedded
