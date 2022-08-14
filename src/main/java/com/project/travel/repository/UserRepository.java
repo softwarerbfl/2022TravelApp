@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import java.lang.reflect.Member;
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserRepository {
 
+    @PersistenceContext
     private EntityManager em;
 
     public void save(User user){
@@ -33,9 +35,14 @@ public class UserRepository {
                 .getResultList();
     }
     public User findByUserId(String userId){
-        return em.createQuery("select u from User u where u.userId= :userId", User.class)
-                .setParameter("userId",userId)
-                .getSingleResult();
+        try{
+            return em.createQuery("select u from User u where u.userId= :userId", User.class)
+                    .setParameter("userId",userId)
+                    .getSingleResult();
+        }catch(NoResultException e){
+            return null;
+        }
+
     }
 
     public User checkIdPassword(String userId, String userPassword) {

@@ -28,7 +28,7 @@ public class Post {
     private User user; //게시물 작성자
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "di")
     private List<User> likeUsers;
 
     @ManyToMany

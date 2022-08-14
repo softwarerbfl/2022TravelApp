@@ -27,8 +27,8 @@ public class UserService {
     }
     //아이디 중복 확인 함수
     private void validateDuplication(User user){
-        User findUsers=userRepository.findByUserId(user.getUserId());
-        if(findUsers.getUserId()!=null){
+        User findUser=userRepository.findByUserId(user.getUserId());
+        if(findUser!=null){
             throw new IllegalStateException("이미 존재하는 아이디입니다.");
         }
     }

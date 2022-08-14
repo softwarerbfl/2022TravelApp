@@ -11,8 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name="dtype")
 @Getter
 @Setter
 public class Place {
@@ -23,6 +21,7 @@ public class Place {
 
     private String name; //장소 이름
     private Long score; //평점
+    private String address; //주소
     private String content;//세부 내용
     private PlaceType type; //장소 타입(숙소, 식당, 관광지)
 
