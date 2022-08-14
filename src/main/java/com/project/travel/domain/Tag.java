@@ -25,5 +25,4 @@ public class Tag {
     @ManyToMany(mappedBy = "tags")
     private List<Post> posts=new ArrayList<>(); //해시태그가 포함된 게시물들
 
-
 }

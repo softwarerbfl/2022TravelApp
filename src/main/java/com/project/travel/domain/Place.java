@@ -1,4 +1,4 @@
-package com.project.travel.domain.Place;
+package com.project.travel.domain;
 
 import com.project.travel.domain.Image;
 import com.project.travel.domain.Post;
@@ -15,7 +15,7 @@ import java.util.List;
 @DiscriminatorColumn(name="dtype")
 @Getter
 @Setter
-public abstract class Place {
+public class Place {
     @Id
     @GeneratedValue
     @Column(name="place_id")
@@ -24,6 +24,7 @@ public abstract class Place {
     private String name; //장소 이름
     private Long score; //평점
     private String content;//세부 내용
+    private PlaceType type; //장소 타입(숙소, 식당, 관광지)
 
     @Embedded
     private Image image; //장소의 이미지

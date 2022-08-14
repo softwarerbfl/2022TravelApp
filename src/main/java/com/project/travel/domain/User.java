@@ -32,9 +32,8 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Post> posts=new ArrayList<>();
 
-/*    @OneToMany(mappedBy = "likeUser", cascade=CascadeType.ALL)
-    @JsonIgnore
-    private List<Post> likePosts=new ArrayList<>();*/
+    @ManyToMany(mappedBy = "likeUsers", cascade=CascadeType.ALL)
+    private List<Post> likePosts=new ArrayList<>();
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name="user_image_id")

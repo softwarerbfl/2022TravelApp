@@ -38,7 +38,6 @@ public class UserRepository {
                 .getSingleResult();
     }
 
-
     public User checkIdPassword(String userId, String userPassword) {
         return em.createQuery("select u from User u where u.userId= :userId and u.userPassword= :userPassword", User.class)
                 .setParameter("userId",userId)

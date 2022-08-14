@@ -19,6 +19,4 @@ public class Image {
 
     @Column(nullable = false)
     private String fileUrl;
-
-
 }

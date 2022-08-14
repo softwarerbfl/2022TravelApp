@@ -1,7 +1,5 @@
 package com.project.travel.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.project.travel.domain.Place.Place;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
