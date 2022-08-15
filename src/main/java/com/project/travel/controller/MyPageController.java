@@ -49,7 +49,7 @@ public class MyPageController {
         userImageService.join(userImage);
         //유저 이미지 등록
         user.setUserImage(userImage);
-
+        userService.join(user);
 
         return (userImage!=null) ?
                 ResponseEntity.status(HttpStatus.OK).body(userImage):
@@ -84,4 +84,5 @@ public class MyPageController {
     /**
      * 마이페이지에 유저가 좋아한 게시물(Post)들 전송
      */
+
 }

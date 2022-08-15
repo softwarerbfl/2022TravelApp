@@ -20,8 +20,8 @@ public class PostService {
 
     private final UserRepository userRepository;
     private final PostRepository postRepository;
-    private  final PlaceRepository placeRepository;
-    private  final TagRepository tagRepository;
+    private final PlaceRepository placeRepository;
+    private final TagRepository tagRepository;
 
     //게시물 작성
     public Long savePost(Long userId, String title,
@@ -31,12 +31,12 @@ public class PostService {
                          List<String> contents,
                          List<Image> images,
                          List<Integer> days,
-                         List<String> sPlaces){
+                         List<String> sPlaces) {
 
         User user = userRepository.findOne(userId);
 
         List<Place> places = new ArrayList<>();
-        for (int i = 0; i < sPlaces.size();i++){
+        for (int i = 0; i < sPlaces.size(); i++) {
             Place place = new Place();
             place.setName(sPlaces.get(i));
             place.setScore(scores.get(i));
@@ -48,7 +48,7 @@ public class PostService {
         }
 
         List<Tag> tags = new ArrayList<>();
-        for (int i = 0; i < sTags.size();i++){
+        for (int i = 0; i < sTags.size(); i++) {
             Tag tag = new Tag();
             tag.setTagContent(sTags.get(i));
             tagRepository.save(tag);
@@ -62,38 +62,35 @@ public class PostService {
     }
 
     //게시물 보기
-    public Post viewPost(Long postId){
+    public Post viewPost(Long postId) {
         return postRepository.findOne(postId);
     }
 
     // 좋아요 가장 많은 순으로 정렬해서 리턴
-    public List<Post> defaultPosts(){
-        if(postRepository.findAll().isEmpty()){
+    public List<Post> defaultPosts() {
+        if (postRepository.findAll().isEmpty()) {
             throw new IllegalStateException("글이 없습니다.");
         }
         return postRepository.findAll();
     }
 
     // 검색받은 태그에 따른 글 리턴
-    public List<Post> searchPosts(String sTag){
-        if(postRepository.findByHashtag(sTag).isEmpty()){
+    public List<Post> searchPosts(String sTag) {
+        if (postRepository.findByHashtag(sTag).isEmpty()) {
             throw new IllegalStateException("글이 없습니다.");
         }
         return postRepository.findByHashtag(sTag);
     }
 
     //포스트 좋아요
-    public void likePost(Long userId, Long postId){
+    public void likePost(Long userId, Long postId) {
+        //사용자가 중복하여 한 게시물에 좋아요를 누르는 경우
+        if (userRepository.findOne(userId).getLikePosts().contains(postRepository.findOne(postId))) {
+            return;
+        }
         userRepository.findOne(userId).getLikePosts().add(postRepository.findOne(postId));
         postRepository.findOne(postId).getLikeUsers().add(userRepository.findOne(userId));
-
         //post 좋아요 +1
         postRepository.findOne(postId).addLike();
-
     }
-
-
-
-
-
 }
