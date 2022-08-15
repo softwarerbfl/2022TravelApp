@@ -13,7 +13,7 @@ import java.util.List;
 @Setter
 public class Tag {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "tag_id")
     private Long id; //해시테그 고유 아이디
 

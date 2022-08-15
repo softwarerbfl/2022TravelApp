@@ -15,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 public class Post {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "post_id")
     private Long id; //게시물 고유 인덱스
 
@@ -70,7 +70,7 @@ public class Post {
 
     }
 
-    public void addLikes() {
+    public void addLike() {
         this.likes += 1;
     }
 }

@@ -6,8 +6,8 @@ import javax.persistence.*;
 
 @EqualsAndHashCode
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Getter
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@Getter @Setter
 @Embeddable
 public class Image {
 

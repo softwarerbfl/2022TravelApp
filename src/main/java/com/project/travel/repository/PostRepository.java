@@ -20,14 +20,9 @@ public class PostRepository{
         em.persist(post);
     }
     public Post findOne(Long id){
-        Post post=em.find(Post.class, id);
-        return post;
+        return em.find(Post.class, id);
     }
 
-    /**
-     * 좋아요 개수가 높은 순서로 모든 게시물(post)들을 return
-     * @return List<Post>
-     */
     public List<Post> findAll() {
         try{
             return em.createQuery("select u from Post u order by u.likes desc", Post.class)
@@ -38,14 +33,16 @@ public class PostRepository{
 
     }
 
-    public List<Post> findByHashtag(Tag tag){
-        String t = tag.getTagContent();
-        return em.createQuery("select u from Post u where u.tags= : t", Post.class)
-                .setParameter("t",t)
-                .getResultList();
+    public List<Post> findByHashtag(String tag){
+        try{
+            return em.createQuery("select p from Post p inner join p.tags pt where pt.tagContent = :tag", Post.class)
+                    .setParameter("tag",tag)
+                    .getResultList();
+        }catch(NoResultException e){
+            return null;
+        }
+
     }
 
-
-
-
 }
+
