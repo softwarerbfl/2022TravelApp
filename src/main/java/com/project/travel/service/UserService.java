@@ -2,6 +2,7 @@ package com.project.travel.service;
 
 import com.project.travel.controller.UserForm;
 import com.project.travel.domain.User;
+import com.project.travel.domain.UserImage;
 import com.project.travel.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +13,18 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 public class UserService {
     @Autowired
     private final UserRepository userRepository;
+    @Transactional
+    public void transactionBegin(){
+        userRepository.transactionBegin();
+    }
+    @Transactional
+    public void transactionCommit(){
+        userRepository.transactionCommit();
+    }
     /**
      * 회원 가입
      */
@@ -26,10 +35,11 @@ public class UserService {
         return user.getId();
     }
     @Transactional
-    public Long save(User user){
+    public void save(User user){
         userRepository.save(user);
-        return user.getId();
     }
+
+
     //아이디 중복 확인 함수
     private void validateDuplication(User user){
         User findUser=userRepository.findByUserId(user.getUserId());

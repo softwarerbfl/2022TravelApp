@@ -38,3 +38,7 @@ out/
 
 # Project exclude paths
 /node_modules/
+
+application.properties
+
+aws.yml

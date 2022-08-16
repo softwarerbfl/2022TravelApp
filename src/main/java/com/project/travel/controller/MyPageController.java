@@ -10,15 +10,21 @@ import com.project.travel.service.PostService;
 import com.project.travel.service.UserImageService;
 import com.project.travel.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.rmi.server.LogStream.log;
+
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 public class MyPageController {
@@ -31,6 +37,8 @@ public class MyPageController {
      */
     @PostMapping("myPage/{userId}/userImage/regist")
     public ResponseEntity<UserImage> registUserImage(@PathVariable("userId") Long userId, @RequestPart("file") List<MultipartFile> multipartFile){
+        //userService.transactionBegin();
+
         User user=userService.findOne(userId);
 
         //이미지 객체 생성
@@ -47,10 +55,12 @@ public class MyPageController {
         userImage.setImage(image);
         userImage.setUser(user);
         userImageService.join(userImage);
+
         //유저 이미지 등록
         user.setUserImage(userImage);
-        userService.save(user);
 
+
+        //userService.transactionCommit();
         return (userImage!=null) ?
                 ResponseEntity.status(HttpStatus.OK).body(userImage):
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).build();

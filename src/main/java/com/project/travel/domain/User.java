@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.catalina.LifecycleState;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.util.*;
@@ -37,8 +38,8 @@ public class User {
     @ManyToMany(mappedBy = "likeUsers", cascade=CascadeType.ALL)
     private List<Post> likePosts=new ArrayList<>();
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name="user_image_id")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn//(name="user_image_id")
     private UserImage userImage;
 
     @JsonIgnore
@@ -82,7 +83,7 @@ public class User {
             }
         });
 
-        //내림차순 정렬된 list_entries내의 태그들을 차례대로 recommendTags에 추가가
+        //내림차순 정렬된 list_entries 내의 태그들을 차례대로 recommendTags에 추가가
         for(int i=0;i<list_entries.size();i++){
             Tag tag=new Tag();
             User user=this;

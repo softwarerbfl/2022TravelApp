@@ -21,6 +21,6 @@ public class UserImage{
     private Image image;
 
     @JsonIgnore
-    @OneToOne(mappedBy = "userImage",fetch = FetchType.LAZY)
+    @OneToOne//(mappedBy = "userImage")
     private User user;
 }

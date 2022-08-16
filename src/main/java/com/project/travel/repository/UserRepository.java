@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import java.lang.reflect.Member;
@@ -21,15 +22,20 @@ public class UserRepository {
 
     @PersistenceContext
     private EntityManager em;
-
+    EntityTransaction transaction;
+    //public UserRepository(EntityManager em) {
+    //    this.em = em;
+    //}
     public void save(User user){
         em.persist(user);
     }
-
+    public void transactionBegin(){transaction.begin();}
+    public void transactionCommit(){transaction.commit();}
     public User findOne(Long id){
         User user=em.find(User.class, id);
         return user;
     }
+
     public List<User> findAll(){
         return em.createQuery("select u from User u", User.class)
                 .getResultList();
