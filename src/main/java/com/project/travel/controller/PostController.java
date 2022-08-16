@@ -1,6 +1,7 @@
 package com.project.travel.controller;
 
 import com.project.travel.domain.*;
+import com.project.travel.repository.TagRepository;
 import com.project.travel.service.AwsS3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -34,7 +35,7 @@ public class PostController {
     private final PostService postService;
     private final UserService userService;
     private final AwsS3Service awsS3Service;
-
+    private final TagRepository tagRepository;
     private String find = new String();
 
     String url = "https://travel-app-image-bucket.s3.ap-northeast-2.amazonaws.com/33b1742a-1693-4aed-a08d-ea4ee7293f6b.png";
@@ -71,7 +72,24 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.OK).body("Post Success");
     }
 
-
+    /**
+     * 사용자가 find를 검색했을 때 user의 userSearch에 저장함과 동시에 검색한 게시물(Post)반환
+     * @param find
+     * @param userId
+     * @return List<Post>
+     */
+    @Transactional
+    @ResponseBody
+    @GetMapping(value = "/search/{userId}/{find}")
+    public ResponseEntity<List<Post>> searchPost(@PathVariable("find") String find, @PathVariable("userId") Long userId){
+        Tag tag = new Tag();
+        tag.setTagContent("find");
+        tagRepository.save(tag);
+        User user = userService.findOne(userId);
+        user.getUserSearch().add(tag);
+        userService.save(user);
+        return ResponseEntity.status(HttpStatus.OK).body(postService.searchPosts(find));
+    }
     /**
      * 게시물 구경
      * @param postId
@@ -166,18 +184,7 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.OK).body(placess);
     }
 
-    /**
-     * 검색할 때 find가 포함된 게시물(Post)반환
-     * @param find
-     * @return List<Post>
-     */
-    @Transactional
-    @ResponseBody
-    @GetMapping(value = "/search/{find}")
-    public ResponseEntity<List<Post>> searchPost(@PathVariable("find") String find){
-        return ResponseEntity.status(HttpStatus.OK).body(postService.searchPosts(find));
-    }
-    /**
+        /**
      * 검색할 때 find가 포함된 게시물들의 태그(tag) 반환
      * @param find
      * @return List<List<Tag>>
