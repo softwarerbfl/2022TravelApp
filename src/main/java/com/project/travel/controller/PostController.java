@@ -83,7 +83,7 @@ public class PostController {
     @GetMapping(value = "/search/{userId}/{find}")
     public ResponseEntity<List<Post>> searchPost(@PathVariable("find") String find, @PathVariable("userId") Long userId){
         Tag tag = new Tag();
-        tag.setTagContent("find");
+        tag.setTagContent(find);
         tagRepository.save(tag);
         User user = userService.findOne(userId);
         user.getUserSearch().add(tag);
