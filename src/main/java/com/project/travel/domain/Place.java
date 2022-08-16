@@ -1,5 +1,6 @@
 package com.project.travel.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.project.travel.domain.Image;
 import com.project.travel.domain.Post;
 import lombok.Getter;
@@ -30,6 +31,7 @@ public class Place {
     @Embedded
     private Image image; //장소의 이미지
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "places")
     private List<Post> posts= new ArrayList<>();
 

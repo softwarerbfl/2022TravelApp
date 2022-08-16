@@ -1,6 +1,7 @@
 package com.project.travel.controller;
 
 import com.project.travel.domain.Image;
+import com.project.travel.domain.Post;
 import com.project.travel.domain.User;
 import com.project.travel.domain.UserImage;
 import com.project.travel.repository.UserImageRepository;
@@ -30,8 +31,7 @@ public class MyPageController {
      */
     @PostMapping("myPage/{userId}/userImage/regist")
     public ResponseEntity<UserImage> registUserImage(@PathVariable("userId") Long userId, @RequestPart("file") List<MultipartFile> multipartFile){
-        User user=new User();
-        user=userService.findOne(userId);
+        User user=userService.findOne(userId);
 
         //이미지 객체 생성
         List<String> s=awsS3Service.uploadImage(multipartFile);
@@ -49,7 +49,7 @@ public class MyPageController {
         userImageService.join(userImage);
         //유저 이미지 등록
         user.setUserImage(userImage);
-        userService.join(user);
+        userService.save(user);
 
         return (userImage!=null) ?
                 ResponseEntity.status(HttpStatus.OK).body(userImage):
@@ -71,18 +71,31 @@ public class MyPageController {
      * 마이페이지에 유저 이름 전송
      */
     @GetMapping("myPage/{userId}/userName")
-    public String myPageUserName(@PathVariable("userId") Long userId){
-        User user=new User();
-        user=userService.findOne(userId);
+    public ResponseEntity<String> myPageUserName(@PathVariable("userId") Long userId){
+        User user=userService.findOne(userId);
 
-        return user.getUserName();
+        return (user!=null) ?
+                ResponseEntity.status(HttpStatus.OK).body(user.getUserName()):
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
     /**
      * 마이 페이지에 유저가 쓴 게시물(Post)들 전송
      */
-
+    @GetMapping("myPage/{userId}/post/myRecords")
+    public ResponseEntity<List<Post>> myPost(@PathVariable("userId") Long userId){
+        List<Post> myPosts=postService.viewMyPost(userId);
+        return (myPosts!=null) ?
+                ResponseEntity.status(HttpStatus.OK).body(myPosts):
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
     /**
-     * 마이페이지에 유저가 좋아한 게시물(Post)들 전송
+     * 마이페이지에 유저가 좋아한 게시물(Post) 모두 전송
      */
-
+    @GetMapping("myPage/{userId}/post/likes")
+    public ResponseEntity<List<Post>> likePosts(@PathVariable("userId") Long userId){
+        List<Post> likePosts=postService.viewLikePost(userId);
+        return (likePosts!=null) ?
+                ResponseEntity.status(HttpStatus.OK).body(likePosts):
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
 }

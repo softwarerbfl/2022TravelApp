@@ -43,6 +43,14 @@ public class PostRepository{
         }
 
     }
-
+    public List<Post> findByUserId(Long userId){
+        try{
+            return em.createQuery("select p from Post p where p.user.id = :userId",Post.class)
+                    .setParameter("userId",userId)
+                    .getResultList();
+        }catch(NoResultException e){
+            return null;
+        }
+    }
 }
 

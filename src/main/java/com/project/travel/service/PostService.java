@@ -1,5 +1,6 @@
 package com.project.travel.service;
 
+import com.project.travel.controller.PostForm;
 import com.project.travel.domain.*;
 import com.project.travel.domain.Place;
 import com.project.travel.repository.PlaceRepository;
@@ -31,7 +32,8 @@ public class PostService {
                          List<String> contents,
                          List<Image> images,
                          List<Integer> days,
-                         List<String> sPlaces) {
+                         List<String> sPlaces,
+                         Long money) {
 
         User user = userRepository.findOne(userId);
 
@@ -55,7 +57,7 @@ public class PostService {
             tags.add(tag);
         }
 
-        Post post = Post.createPost(user, title, tags, days, places);
+        Post post = Post.createPost(user, title, tags, days, places, money);
         postRepository.save(post);
 
         return post.getId();
@@ -66,6 +68,11 @@ public class PostService {
         return postRepository.findOne(postId);
     }
 
+    //자기가 쓴 게시물 보기
+    public List<Post> viewMyPost(Long userId){
+        List<Post> posts=postRepository.findByUserId(userId);
+        return posts;
+    }
     // 좋아요 가장 많은 순으로 정렬해서 리턴
     public List<Post> defaultPosts() {
         if (postRepository.findAll().isEmpty()) {
@@ -92,5 +99,13 @@ public class PostService {
         postRepository.findOne(postId).getLikeUsers().add(userRepository.findOne(userId));
         //post 좋아요 +1
         postRepository.findOne(postId).addLike();
+    }
+
+    //좋아요한 게시물(post) 조회
+    public List<Post> viewLikePost(Long userId){
+        User user=userRepository.findOne(userId);
+        List<Post> likePosts= user.getLikePosts();
+
+        return likePosts;
     }
 }

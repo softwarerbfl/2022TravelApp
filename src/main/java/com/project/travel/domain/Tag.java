@@ -1,5 +1,6 @@
 package com.project.travel.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,9 +20,11 @@ public class Tag {
 
     private String tagContent; //해시태그 내용
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "tags")
     private List<Post> posts=new ArrayList<>(); //해시태그가 포함된 게시물들
 

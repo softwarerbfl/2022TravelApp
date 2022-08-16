@@ -25,6 +25,11 @@ public class UserService {
         userRepository.save(user);
         return user.getId();
     }
+    @Transactional
+    public Long save(User user){
+        userRepository.save(user);
+        return user.getId();
+    }
     //아이디 중복 확인 함수
     private void validateDuplication(User user){
         User findUser=userRepository.findByUserId(user.getUserId());

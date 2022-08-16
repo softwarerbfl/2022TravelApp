@@ -52,9 +52,14 @@ public class UserRepository {
     }
 
     public User checkIdPassword(String userId, String userPassword) {
-        return em.createQuery("select u from User u where u.userId= :userId and u.userPassword= :userPassword", User.class)
-                .setParameter("userId",userId)
-                .setParameter("userPassword",userPassword)
-                .getSingleResult();
+        try{
+            return em.createQuery("select u from User u where u.userId= :userId and u.userPassword= :userPassword", User.class)
+                    .setParameter("userId",userId)
+                    .setParameter("userPassword",userPassword)
+                    .getSingleResult();
+        }
+        catch(NoResultException e){
+            return null;
+        }
     }
 }
