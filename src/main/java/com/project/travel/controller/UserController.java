@@ -6,6 +6,7 @@ import com.project.travel.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -37,18 +38,22 @@ public class UserController {
      * 아닐 경우 HttpStatus.BAD_REQUEST 전송
      */
     @PostMapping("/user/signup")
-    public ResponseEntity<User> create(@RequestBody UserForm dto, BindingResult result){
+    public ResponseEntity<String> create(@RequestBody UserForm dto, BindingResult result){
         if(result.hasErrors()){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
+        BCryptPasswordEncoder encoder=new BCryptPasswordEncoder();
+        //user 비밀번호 암호화
+        String securePassword= encoder.encode(dto.getUserPassword());
+
         User user=new User();
         user.setUserId(dto.getUserId());
         user.setUserName(dto.getUserName());
-        user.setUserPassword(dto.getUserPassword());
+        user.setUserPassword(securePassword);
         userService.join(user);
 
         return (user!=null)?
-                ResponseEntity.status(HttpStatus.OK).body(user):
+                ResponseEntity.status(HttpStatus.OK).body("Signup Succeed"):
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
@@ -63,8 +68,9 @@ public class UserController {
         if(result.hasErrors()){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        User user=userService.loginCheck(dto);
-        return (user!=null)?
+        BCryptPasswordEncoder encoder=new BCryptPasswordEncoder();
+        User user=userService.findByUserId(dto.getUserId());
+        return (user.checkPassword(dto.getUserPassword(),encoder))?
                 ResponseEntity.status(HttpStatus.OK).body(user):
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 

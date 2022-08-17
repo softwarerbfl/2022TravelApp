@@ -51,7 +51,13 @@ public class UserService {
             throw new IllegalStateException("이미 존재하는 아이디입니다.");
         }
     }
-
+    /**
+     * userId(String)로 user검색
+     */
+    public User findByUserId(String userId){
+        User user=userRepository.findByUserId(userId);
+        return user;
+    }
     /**
      * 전체 회원 조회
      */

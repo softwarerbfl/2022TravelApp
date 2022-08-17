@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.catalina.LifecycleState;
 import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.persistence.*;
 import java.util.*;
@@ -14,7 +16,7 @@ import java.util.*;
 @Getter
 @Setter
 @NoArgsConstructor
-public class User {
+public class User{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id")
@@ -53,43 +55,14 @@ public class User {
         tag.setUser(this);
     }
 
-    //사용자의 추천 태그 계산
-    public void calRecommendTag(){
-        //모든 태그를 하나에 모음
-        List<Tag> allTags=new ArrayList<>();
-        for(int i=0;i<userSearch.size();i++){
-            allTags.add(i,this.userSearch.get(i));
-        }
-        for(int j=userSearch.size();j<userSearch.size()+likePosts.size();j++){
-            allTags.add(j,likePosts.get(j-userSearch.size()).getTags().get(j-userSearch.size()));
-        }
-        //중복 제거한 태그들의 개수를 셈
-        HashMap<String,Integer> calc=new HashMap<>();
-        for(int a=0;a<allTags.size();a++){
-            calc.put(allTags.get(a).getTagContent(),0);
-        }
 
-        for(int b=0;b<allTags.size();b++){
-            //b번째 태그의 개수 가져옴
-            Integer tagContentCount=calc.get(allTags.get(b).getTagContent());
-            tagContentCount+=1;
-        }
-
-        List<Map.Entry<String, Integer>> list_entries=new ArrayList<Map.Entry<String, Integer>>(calc.entrySet());
-        Collections.sort(list_entries, new Comparator<Map.Entry<String, Integer>>() {
-            @Override
-            public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
-                return o2.getValue().compareTo(o1.getValue());
-            }
-        });
-
-        //내림차순 정렬된 list_entries 내의 태그들을 차례대로 recommendTags에 추가가
-        for(int i=0;i<list_entries.size();i++){
-            Tag tag=new Tag();
-            User user=this;
-            tag.setTagContent(list_entries.get(i).getKey());
-            tag.setUser(user);
-            this.recommendTags.add(i,tag);
-        }
+    /**
+     * 비밀번호 확인
+     * @param plainPassword 암호화 이전의 비밀번호
+     * @param passwordEncoder 암호화에 사용된 클래스
+     * @return true | false
+     */
+    public boolean checkPassword(String plainPassword, BCryptPasswordEncoder passwordEncoder) {
+        return passwordEncoder.matches(plainPassword, this.userPassword);
     }
 }
