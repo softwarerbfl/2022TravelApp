@@ -25,11 +25,9 @@ public class MainPageController {
      */
     @GetMapping("main/{userId}/tags")
     public ResponseEntity<List<Tag>> recommendTag(@PathVariable("userId") Long userId){
-        User user=userService.findOne(userId);
-        user.calRecommendTag();
-        List<Tag> tags=user.getRecommendTags();
-        return (tags!=null) ?
-                ResponseEntity.status(HttpStatus.OK).body(tags):
+
+        return (userService.calRecommendTag(userId)!=null) ?
+                ResponseEntity.status(HttpStatus.OK).body(userService.calRecommendTag(userId)):
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
     /**
@@ -37,18 +35,14 @@ public class MainPageController {
      */
     @GetMapping("main/{userId}/posts")
     public ResponseEntity<List<List<Post>>> recommendPost(@PathVariable("userId") Long userId){
-        User user=userService.findOne(userId);
-        user.calRecommendTag();
-        List<Tag> tags=user.getRecommendTags();
-        List<List<Post>> posts=new ArrayList<>();
 
+        List<Tag> tags=userService.calRecommendTag(userId); //추천 태그 목록
+        List<List<Post>> posts=new ArrayList<>();
         for(int i=0;i<tags.size();i++){
-            List<Post> tag_posts=postService.searchPosts(tags.get(i).getTagContent());
-            for(int j=0;j<tag_posts.size();j++){
-                posts.get(i).add(j,tag_posts.get(j));
-            }
+            List<Post> posts1=postService.searchPosts(tags.get(i).getTagContent());
+            posts.add(i,posts1);
         }
-        return (posts!=null) ?
+        return (!posts.isEmpty()) ?
                 ResponseEntity.status(HttpStatus.OK).body(posts):
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }

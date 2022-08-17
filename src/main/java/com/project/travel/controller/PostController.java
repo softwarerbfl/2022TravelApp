@@ -4,6 +4,7 @@ import com.project.travel.domain.*;
 import com.project.travel.repository.TagRepository;
 import com.project.travel.service.AwsS3Service;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,7 +28,7 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
-
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 public class PostController {
@@ -73,6 +74,21 @@ public class PostController {
     }
 
     /**
+     * userSearch 목록을 확인하는 api
+     */
+    @Transactional
+    @GetMapping("/test/{userId}/userSearchTags")
+    @ResponseBody
+    public ResponseEntity<List<Tag>> userSearchTags(@PathVariable("userId") Long userId){
+        User user=userService.findOne(userId);
+        log.info(user.getUserName());
+        List<Tag> tags=new ArrayList<>();
+        for (int i=0; i<user.getUserSearch().size();i++){
+            tags.add(user.getUserSearch().get(i));
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(tags);
+    }
+    /**
      * 사용자가 find를 검색했을 때 user의 userSearch에 저장함과 동시에 검색한 게시물(Post)반환
      * @param find
      * @param userId
@@ -82,14 +98,25 @@ public class PostController {
     @ResponseBody
     @GetMapping(value = "/search/{userId}/{find}")
     public ResponseEntity<List<Post>> searchPost(@PathVariable("find") String find, @PathVariable("userId") Long userId){
-        Tag tag = new Tag();
-        tag.setTagContent(find);
-        tagRepository.save(tag);
-        User user = userService.findOne(userId);
-        user.getUserSearch().add(tag);
-        userService.save(user);
+
+        userService.findAndSaveTag(userId, find);
+
         return ResponseEntity.status(HttpStatus.OK).body(postService.searchPosts(find));
     }
+
+    @Transactional
+    @ResponseBody
+    @GetMapping(value = "/{userId}")
+    public ResponseEntity<List<Tag>> testSearchTag(@PathVariable("userId") Long userId){
+        List<Tag> searchTags = new ArrayList<>();
+        List<Tag> getSearchTags = userService.findOne(userId).getUserSearch();
+        for (int i = 0; i<getSearchTags.size();i++){
+            searchTags.add(getSearchTags.get(i));
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(searchTags);
+    }
+
     /**
      * 게시물 구경
      * @param postId
@@ -123,7 +150,7 @@ public class PostController {
         Post post = postService.viewPost(postId);
         List<Place> places =new ArrayList<>();
 
-        for (int j = 0; j < post.getTags().size(); j++) {
+        for (int j = 0; j < post.getPlaces().size(); j++) {
             Place place = post.getPlaces().get(j);
             places.add(place);
         }

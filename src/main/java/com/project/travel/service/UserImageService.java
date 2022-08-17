@@ -1,11 +1,13 @@
 package com.project.travel.service;
 
+import com.project.travel.domain.Image;
 import com.project.travel.domain.UserImage;
 import com.project.travel.repository.UserImageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 
 @RequiredArgsConstructor
 @Service
@@ -18,5 +20,7 @@ public class UserImageService {
         userImageRepository.save(userImage);
         return userImage.getId();
     }
-
+    public Image findUserImageByUser(Long userID){
+        return userImageRepository.findUserImageByUser(userID).getImage();
+    }
 }
