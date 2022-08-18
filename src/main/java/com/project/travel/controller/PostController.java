@@ -105,18 +105,6 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.OK).body(postService.searchPosts(find));
     }
 
-    @Transactional
-    @ResponseBody
-    @GetMapping(value = "/{userId}")
-    public ResponseEntity<List<Tag>> testSearchTag(@PathVariable("userId") Long userId){
-        List<Tag> searchTags = new ArrayList<>();
-        List<Tag> getSearchTags = userService.findOne(userId).getUserSearch();
-        for (int i = 0; i<getSearchTags.size();i++){
-            searchTags.add(getSearchTags.get(i));
-        }
-
-        return ResponseEntity.status(HttpStatus.OK).body(searchTags);
-    }
 
     /**
      * 게시물 구경

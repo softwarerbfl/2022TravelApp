@@ -52,5 +52,14 @@ public class PostRepository{
             return null;
         }
     }
+    public List<Post> findLikePostsByUser(Long userId){
+        try{
+            return em.createQuery("select p from Post p inner join p.likeUsers pt where pt.id = :userId", Post.class)
+                    .setParameter("userId",userId)
+                    .getResultList();
+        }catch(NoResultException e){
+            return null;
+        }
+    }
 }
 

@@ -111,9 +111,6 @@ public class PostService {
 
     //좋아요한 게시물(post) 조회
     public List<Post> viewLikePost(Long userId){
-        User user=userRepository.findOne(userId);
-        List<Post> likePosts= user.getLikePosts();
-
-        return likePosts;
+        return postRepository.findLikePostsByUser(userId);
     }
 }

@@ -1,6 +1,7 @@
 package com.project.travel.repository;
 
 import com.project.travel.controller.UserForm;
+import com.project.travel.domain.Post;
 import com.project.travel.domain.User;
 import com.project.travel.service.UserService;
 import lombok.NoArgsConstructor;
@@ -23,14 +24,9 @@ public class UserRepository {
     @PersistenceContext
     private EntityManager em;
     EntityTransaction transaction;
-    //public UserRepository(EntityManager em) {
-    //    this.em = em;
-    //}
     public void save(User user){
         em.persist(user);
     }
-    public void transactionBegin(){transaction.begin();}
-    public void transactionCommit(){transaction.commit();}
     public User findOne(Long id){
         User user=em.find(User.class, id);
         return user;
@@ -68,5 +64,6 @@ public class UserRepository {
             return null;
         }
     }
+
 
 }
