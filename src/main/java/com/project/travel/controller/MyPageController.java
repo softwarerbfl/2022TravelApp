@@ -66,6 +66,7 @@ public class MyPageController {
             onePost.add(1,String.valueOf(Collections.max(post.getDay()))); //마지막 여행 날
             onePost.add(2,String.valueOf(post.getScore())); //게시물 평점
             onePost.add(3, postService.viewPostImageUrl(post.getId())); //게시물 대표사진 url
+            onePost.add(4, String.valueOf(post.getId())); //게시물 id
             result.add(i,onePost);
         }
 
@@ -89,6 +90,7 @@ public class MyPageController {
             onePost.add(1,String.valueOf(Collections.max(post.getDay()))); //마지막 여행 날
             onePost.add(2,String.valueOf(post.getScore())); //게시물 평점
             onePost.add(3, postService.viewPostImageUrl(post.getId())); //게시물 대표사진 url
+            onePost.add(4, String.valueOf(post.getId())); //게시물 id
             result.add(i,onePost);
         }
         return (result!=null) ?
