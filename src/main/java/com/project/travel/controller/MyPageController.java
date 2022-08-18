@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -56,9 +58,22 @@ public class MyPageController {
      * 마이 페이지에 유저가 쓴 게시물(Post)들 전송
      */
     @GetMapping("/myPage/{userId}/post/myRecords")
-    public ResponseEntity<List<Post>> myPost(@PathVariable("userId") Long userId){
+    public ResponseEntity<Map<String,Object>> myPost(@PathVariable("userId") Long userId){
+        List<Post> myPost=postService.viewMyPost(userId); //user가 작성한 전체 게시물들
+        List<String> myPostImageUrl=new ArrayList<>(); //첫 번째 이미지의 url
+
+        Map<String,Object> result=new HashMap<>();
+
+        //i번째 게시물의 첫 번째 사진의 url
+        for(int i=0;i<myPost.size();i++){
+            Post post=myPost.get(i);
+            String url=postService.viewMyPostImageUrl(post.getId());
+
+            result.put(url,post);
+        }
+
         return (postService.viewMyPost(userId)!=null) ?
-                ResponseEntity.status(HttpStatus.OK).body(postService.viewMyPost(userId)):
+                ResponseEntity.status(HttpStatus.OK).body(result):
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
     /**

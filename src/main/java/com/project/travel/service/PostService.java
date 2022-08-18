@@ -33,7 +33,8 @@ public class PostService {
                          List<Image> images,
                          List<Integer> days,
                          List<String> sPlaces,
-                         Long money) {
+                         Long money,
+                         List<String> addresses) {
 
         User user = userRepository.findOne(userId);
 
@@ -45,6 +46,7 @@ public class PostService {
             place.setContent(contents.get(i));
             place.setImage(images.get(i));
             place.setPlaceType(placeTypes.get(i));
+            place.setAddress(addresses.get(i));
             placeRepository.save(place);
             places.add(place);
         }
@@ -72,6 +74,12 @@ public class PostService {
     public List<Post> viewMyPost(Long userId){
         List<Post> posts=postRepository.findByUserId(userId);
         return posts;
+    }
+    //게시물들 첫 번째 이미지의 url 전송
+    public String viewMyPostImageUrl(Long postId){
+        Post post=postRepository.findOne(postId);
+        String url=post.getPlaces().get(0).getImage().getFileUrl();
+        return url;
     }
     // 좋아요 가장 많은 순으로 정렬해서 리턴
     public List<Post> defaultPosts() {

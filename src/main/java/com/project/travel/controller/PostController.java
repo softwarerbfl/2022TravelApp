@@ -39,7 +39,7 @@ public class PostController {
     private final TagRepository tagRepository;
     private String find = new String();
 
-    String url = "https://travel-app-image-bucket.s3.ap-northeast-2.amazonaws.com/33b1742a-1693-4aed-a08d-ea4ee7293f6b.png";
+    String url = "https://travel-app-image-bucket.s3.ap-northeast-2.amazonaws.com/";
 
     /**
      * 게시물 업로드
@@ -69,7 +69,8 @@ public class PostController {
                 images,
                 form.getDays(),
                 form.getSPlaces(),
-                form.getMoney());
+                form.getMoney(),
+                form.getAddresses());
         return ResponseEntity.status(HttpStatus.OK).body("Post Success");
     }
 

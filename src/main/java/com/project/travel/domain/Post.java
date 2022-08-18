@@ -72,6 +72,7 @@ public class Post {
             s += post.getPlaces().get(i).getScore();
         }
         s = s/post.getPlaces().size();
+        s=Double.valueOf(Math.round(s));
         post.setScore(s);
 
         return post;

@@ -26,4 +26,5 @@ public class PostForm {
     private List<MultipartFile> images; //이미지
     private List<Integer> days; //몇일차인지
     private List<String> sPlaces; //장소 이름
+    private List<String> addresses; //장소의 주소
 }
