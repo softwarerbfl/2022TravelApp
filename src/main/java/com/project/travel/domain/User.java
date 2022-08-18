@@ -6,8 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.catalina.LifecycleState;
 import org.hibernate.annotations.DynamicUpdate;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.persistence.*;
 import java.util.*;
@@ -56,13 +54,5 @@ public class User{
     }
 
 
-    /**
-     * 비밀번호 확인
-     * @param plainPassword 암호화 이전의 비밀번호
-     * @param passwordEncoder 암호화에 사용된 클래스
-     * @return true | false
-     */
-    public boolean checkPassword(String plainPassword, BCryptPasswordEncoder passwordEncoder) {
-        return passwordEncoder.matches(plainPassword, this.userPassword);
-    }
+
 }

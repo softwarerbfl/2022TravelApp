@@ -6,7 +6,6 @@ import com.project.travel.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -42,14 +41,11 @@ public class UserController {
         if(result.hasErrors()){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        BCryptPasswordEncoder encoder=new BCryptPasswordEncoder();
-        //user 비밀번호 암호화
-        String securePassword= encoder.encode(dto.getUserPassword());
 
         User user=new User();
         user.setUserId(dto.getUserId());
         user.setUserName(dto.getUserName());
-        user.setUserPassword(securePassword);
+        user.setUserPassword(dto.getUserPassword());
         userService.join(user);
 
         return (user!=null)?
@@ -68,9 +64,9 @@ public class UserController {
         if(result.hasErrors()){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        BCryptPasswordEncoder encoder=new BCryptPasswordEncoder();
+
         User user=userService.findByUserId(dto.getUserId());
-        return (user.checkPassword(dto.getUserPassword(),encoder))?
+        return (user.getUserPassword().equals(dto.getUserPassword()))?
                 ResponseEntity.status(HttpStatus.OK).body(user):
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
