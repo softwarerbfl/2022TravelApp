@@ -60,14 +60,13 @@ public class MyPageController {
     @GetMapping("/myPage/{userId}/post/myRecords")
     public ResponseEntity<Map<String,Object>> myPost(@PathVariable("userId") Long userId){
         List<Post> myPost=postService.viewMyPost(userId); //user가 작성한 전체 게시물들
-        List<String> myPostImageUrl=new ArrayList<>(); //첫 번째 이미지의 url
 
         Map<String,Object> result=new HashMap<>();
 
         //i번째 게시물의 첫 번째 사진의 url
         for(int i=0;i<myPost.size();i++){
             Post post=myPost.get(i);
-            String url=postService.viewMyPostImageUrl(post.getId());
+            String url=postService.viewPostImageUrl(post.getId());
 
             result.put(url,post);
         }
@@ -80,9 +79,20 @@ public class MyPageController {
      * 마이페이지에 유저가 좋아한 게시물(Post) 모두 전송
      */
     @GetMapping("/myPage/{userId}/post/likes")
-    public ResponseEntity<List<Post>> likePosts(@PathVariable("userId") Long userId){
-        return (postService.viewLikePost(userId)!=null) ?
-                ResponseEntity.status(HttpStatus.OK).body(postService.viewLikePost(userId)):
+    public ResponseEntity<Map<String,Object>> likePosts(@PathVariable("userId") Long userId){
+        List<Post> likePost=postService.viewLikePost(userId); //user가 좋아요를 누른 전체 게시물들
+        Map<String,Object> result=new HashMap<>();
+
+        //i번째 게시물의 첫 번째 사진의 url
+        for(int i=0;i<likePost.size();i++){
+            Post post=likePost.get(i);
+            String url=postService.viewPostImageUrl(post.getId());
+
+            result.put(url,post);
+        }
+
+        return (result!=null) ?
+                ResponseEntity.status(HttpStatus.OK).body(result):
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 }

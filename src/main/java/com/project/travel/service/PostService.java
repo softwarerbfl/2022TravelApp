@@ -76,7 +76,7 @@ public class PostService {
         return posts;
     }
     //게시물들 첫 번째 이미지의 url 전송
-    public String viewMyPostImageUrl(Long postId){
+    public String viewPostImageUrl(Long postId){
         Post post=postRepository.findOne(postId);
         String url=post.getPlaces().get(0).getImage().getFileUrl();
         return url;
