@@ -5,6 +5,7 @@ import com.project.travel.repository.TagRepository;
 import com.project.travel.service.AwsS3Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -258,4 +259,29 @@ public class PostController {
                 body("Succeeded Like!");
     }
 
+    /**
+     * USER가 FIND를 검색했을 때 나오는 게시물들의 postId, 대표 이미지 url, title들을 return하는 api
+     */
+    @GetMapping(value = "/search/posts/{userId}/{find}")
+    public ResponseEntity<List<List<String>>> searchPosts(@PathVariable("userId") Long userId, @PathVariable("find") String find){
+        userService.findAndSaveTag(userId, find); //검색 기록 추가
+
+        List<List<String>> result= new ArrayList<>();
+        List<Post> post=postService.searchPosts(find);
+
+        for(int i=0;i<post.size();i++){
+            List<String> one=new ArrayList<>();
+            String id= String.valueOf(post.get(i).getId()); //postId 추가
+            String url=postService.viewPostImageUrl(post.get(i).getId()); //이미지 url추가
+            String title=post.get(i).getTitle();//title추가
+            one.add(0,id);
+            one.add(1,url);
+            one.add(2,title);
+            result.add(i,one);
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).
+                body(result);
+
+    }
 }
