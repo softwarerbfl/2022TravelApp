@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -75,21 +76,6 @@ public class PostController {
     }
 
     /**
-     * userSearch 목록을 확인하는 api
-     */
-    @Transactional
-    @GetMapping("/test/{userId}/userSearchTags")
-    @ResponseBody
-    public ResponseEntity<List<Tag>> userSearchTags(@PathVariable("userId") Long userId){
-        User user=userService.findOne(userId);
-        log.info(user.getUserName());
-        List<Tag> tags=new ArrayList<>();
-        for (int i=0; i<user.getUserSearch().size();i++){
-            tags.add(user.getUserSearch().get(i));
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(tags);
-    }
-    /**
      * 사용자가 find를 검색했을 때 user의 userSearch에 저장함과 동시에 검색한 게시물(Post)반환
      * @param find
      * @param userId
@@ -135,15 +121,35 @@ public class PostController {
     @Transactional
     @ResponseBody
     @GetMapping(value = "/post/{postId}/places")
-    public ResponseEntity<List<Place>> viewPostPlaces(@PathVariable("postId") Long postId){
-        Post post = postService.viewPost(postId);
-        List<Place> places =new ArrayList<>();
+    public ResponseEntity<List<List<List<String>>>> viewPostPlaces(@PathVariable("postId") Long postId){
 
-        for (int j = 0; j < post.getPlaces().size(); j++) {
-            Place place = post.getPlaces().get(j);
-            places.add(place);
+        Post post = postService.viewPost(postId);
+        //List<List<Place>> placesByDays = new ArrayList<>();
+        List<List<List<String>>> fin = new ArrayList<>();
+        int index = 0;
+        for (int j = 0; j < Collections.max(post.getDay()); j++) {
+            List<List<String>> places =new ArrayList<>();
+            Integer in = 0;
+            for (int i = index; i<post.getPlaces().size(); i++){
+                if (post.getDay().get(i) == j+1){
+                    Place place = post.getPlaces().get(i);
+                    List<String> str = new ArrayList<>();
+                    str.add(in.toString());
+                    str.add(place.getName());
+                    str.add(place.getContent());
+                    str.add(place.getPlaceType().toString());
+                    str.add(place.getScore().toString());
+                    str.add(place.getAddress());
+                    str.add(place.getImage().getFileUrl());
+                    places.add(str);
+                    index++;
+                    in++;
+                }
+                index = i;
+            }
+            fin.add(places);
         }
-        return ResponseEntity.status(HttpStatus.OK).body(places);
+        return ResponseEntity.status(HttpStatus.OK).body(fin);
     }
 
     /**

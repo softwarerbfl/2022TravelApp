@@ -139,6 +139,7 @@ public class UserService {
         userImageRepository.save(userImage);
 
         transaction.commit();
+
         return userImage;
     }
     /**
